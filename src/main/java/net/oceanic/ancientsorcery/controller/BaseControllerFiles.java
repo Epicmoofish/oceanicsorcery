@@ -9,26 +9,34 @@ import java.util.List;
 //Code yoinked from TheSwirlingVoid
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.WorldSavePath;
+import net.minecraft.world.World;
 import net.oceanic.ancientsorcery.OceanicSorceryMod;
 
 public abstract class BaseControllerFiles {
 
-    public static final Path MOD_CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(OceanicSorceryMod.MODID);
+    public static String MOD_CONFIG_PATH;
 
-    private Path instancePath;
-    protected List<String> instanceDataFileNames;
-
-    public BaseControllerFiles()
+    private String instancePath;
+    protected List<String> instanceDataFileNames = new ArrayList<>();
+    public World world;
+    public BaseControllerFiles(World world)
     {
-        addPath();
+        this.MOD_CONFIG_PATH = world.getServer().getSavePath(WorldSavePath.ROOT).resolve(OceanicSorceryMod.MODID).toString();
+        this.world = world;
+        setBasePath();
         addConfigurationFiles();
     }
-
+    protected static String getModConfigDir() {
+        return MOD_CONFIG_PATH;
+    }
+    protected void setBasePath(String path){
+        instancePath = path;
+        new File(path).mkdirs();
+    }
     protected void addPath(String path)
     {
-        instancePath = MOD_CONFIG_PATH.resolve(path);
-
-        new File(instancePath.toString()).mkdirs();
+        new File(instancePath+"/"+path).mkdirs();
     }
 
     protected void addConfigurationFiles(List<String> fileNames)
@@ -39,7 +47,10 @@ public abstract class BaseControllerFiles {
 
             for (String fileName : fileNames)
             {
-                getConfigurationFile(fileName).createNewFile();
+                File configFile = getConfigurationFile(fileName);
+                if (!configFile.exists()){
+                    configFile.createNewFile();
+                }
             }
 
         } catch (IOException e) {
@@ -47,14 +58,16 @@ public abstract class BaseControllerFiles {
         }
     }
 
-    protected abstract void addPath();
+    protected abstract void setBasePath();
     protected abstract void addConfigurationFiles();
 
     private File getConfigurationFile(String filename)
     {
-        return new File(instancePath.toAbsolutePath() + "/" + filename);
+        return new File(instancePath + "/" + filename);
     }
-
+//    protected void addConfigurationFile(String filePathAndName){
+//        instanceDataFileNames.add(filePathAndName);
+//    }
     public List<File> getConfigurationFiles()
     {
         ArrayList<File> files = new ArrayList<>();
@@ -66,12 +79,12 @@ public abstract class BaseControllerFiles {
     }
 
 
-    public Path getPath()
+    public String getPath()
     {
         return instancePath;
     }
 
-    public static Path getModConfigPath() {
+    public static String getModConfigPath() {
         return MOD_CONFIG_PATH;
     }
 }

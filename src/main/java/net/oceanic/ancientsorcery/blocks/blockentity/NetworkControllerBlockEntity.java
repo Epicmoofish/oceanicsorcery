@@ -5,39 +5,51 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.oceanic.ancientsorcery.OceanicSorceryMod;
 import net.oceanic.ancientsorcery.blocks.BlockInit;
 import net.oceanic.ancientsorcery.blocks.ElementalNetworkControllerBlock;
+import net.oceanic.ancientsorcery.controller.NetworkControllerFiles;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NetworkControllerBlockEntity extends BlockEntity {
     public Set<ElementalNetworkControllerBlock.BlockEntityInfo> routableBEs = new HashSet<>();
+    public Set<ElementalNetworkControllerBlock.BlockEntityTransfer> routableTransfers = new HashSet<>();
     public boolean loaded = false;
     public boolean shouldUpdate = false;
-    public int id = 0;
+    public UUID uuid;
     public NetworkControllerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockInit.NETWORK_CONTROLLER_BE, pos, state);
+        uuid = UUID.randomUUID();
     }
     @Override
     public void readNbt(NbtCompound nbt) {
-        id = nbt.getInt("uniqueid");
+        uuid = nbt.getUuid("UUID");
         super.readNbt(nbt);
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        nbt.putInt("uniqueid", id);
+        nbt.putUuid("UUID", uuid);
         super.writeNbt(nbt);
     }
-
+///setblock ~ ~ ~ ancientsorcery:elemental_network_controller{UUID: [I; 444662511, 1131299623, -1842901606, 1169811965]}
     public static void tick(World world, BlockPos pos, BlockState state, NetworkControllerBlockEntity be) {
         if (!be.loaded){
             be.loaded=true;
             if (!world.isClient()) {
+                world.blockEntityTickers.forEach(entityTicker -> {
+                    if (entityTicker.getPos() != pos) {
+                        if (world.getBlockEntity(entityTicker.getPos()) != null) {
+                            if (world.getBlockEntity(entityTicker.getPos()) instanceof NetworkControllerBlockEntity) {
+                                if (((NetworkControllerBlockEntity) world.getBlockEntity(entityTicker.getPos())).uuid.equals(be.uuid)) {
+                                    be.uuid = UUID.randomUUID();
+                                }
+                            }
+                        }
+                    }
+                });
+                NetworkControllerFiles.get(world).createNewRegionFile(be.uuid);
                 if (world != null && pos != null) {
                     if (state.getBlock() instanceof ElementalNetworkControllerBlock) {
                         ElementalNetworkControllerBlock block = (ElementalNetworkControllerBlock) state.getBlock();

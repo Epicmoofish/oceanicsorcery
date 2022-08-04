@@ -13,6 +13,7 @@ group = project.maven_group
 repositories {
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.bai.lol" }
+	maven { url "https://mvnrepository.com/artifact/org.json/json" }
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -33,6 +34,7 @@ dependencies {
 	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:$rei_version"
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:$rei_version"
+	modImplementation "org.json:json:20220320"
 	// Uncomment the following line to enable the deprecated Fabric API modules.
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
 

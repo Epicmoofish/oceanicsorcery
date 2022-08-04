@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.oceanic.ancientsorcery.OceanicSorceryMod;
 import net.oceanic.ancientsorcery.blocks.blockentity.NetworkControllerBlockEntity;
+import net.oceanic.ancientsorcery.controller.NetworkControllerFiles;
 import net.oceanic.ancientsorcery.packet.PacketInfo;
 import net.oceanic.ancientsorcery.packet.SorceryPacketByteBuf;
 import org.jetbrains.annotations.Nullable;
@@ -45,8 +46,9 @@ public class ElementalNetworkControllerBlock extends BlockWithEntity {
                 NetworkControllerBlockEntity blockEntity = (NetworkControllerBlockEntity) world.getBlockEntity(pos);
                 PacketByteBuf buf = PacketByteBufs.create();
                 for (BlockEntityInfo beinfo: blockEntity.routableBEs) {
-                    sendToClient.add(new BlockEntityTransfer(beinfo, OceanicSorceryMod.TransferMode.EXTRACT, OceanicSorceryMod.Spell.GRAVITY));
+                    sendToClient.add(new BlockEntityTransfer(beinfo, OceanicSorceryMod.TransferMode.NONE, OceanicSorceryMod.Spell.GRAVITY));
                 }
+                System.out.println(NetworkControllerFiles.get(world).readJson(blockEntity.uuid));
                 buf = SorceryPacketByteBuf.writeSetBlockEntityTransfer(sendToClient, buf);
                 buf.writeBlockPos(pos);
                 ServerPlayNetworking.send((ServerPlayerEntity) player, PacketInfo.CLIENTBOUND_CONTROLLER_ID,buf);
@@ -55,7 +57,7 @@ public class ElementalNetworkControllerBlock extends BlockWithEntity {
         if (world.isClient()){
             if (world.getBlockEntity(pos) instanceof NetworkControllerBlockEntity) {
                 NetworkControllerBlockEntity blockEntity = (NetworkControllerBlockEntity) world.getBlockEntity(pos);
-                System.out.println(blockEntity.routableBEs);
+//                System.out.println(blockEntity.routableBEs);
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);

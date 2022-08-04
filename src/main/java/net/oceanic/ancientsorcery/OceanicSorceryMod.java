@@ -1,38 +1,21 @@
 package net.oceanic.ancientsorcery;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.option.ParticlesMode;
-import net.minecraft.command.argument.ParticleEffectArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
 import net.oceanic.ancientsorcery.blocks.BlockInit;
-import net.oceanic.ancientsorcery.blocks.ElementalNetworkControllerBlock;
 import net.oceanic.ancientsorcery.blocks.ElementalPipeBlock;
 import net.oceanic.ancientsorcery.blocks.blockentity.NetworkControllerBlockEntity;
 import net.oceanic.ancientsorcery.callbacks.BlockUpdateCallback;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class OceanicSorceryMod implements ModInitializer {
 	public static String MODID = "ancientsorcery";
@@ -40,6 +23,7 @@ public class OceanicSorceryMod implements ModInitializer {
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+
 	@Override
 	public void onInitialize() {
 		BlockInit.init();
@@ -91,9 +75,10 @@ public class OceanicSorceryMod implements ModInitializer {
 		// Proceed with mild caution
 	}
 	public enum TransferMode{
-		EXTRACT(0),
-		BUFFER(1),
-		INSERT(2);
+		NONE(0),
+		EXTRACT(1),
+		BUFFER(2),
+		INSERT(3);
 		public final int id;
 		TransferMode(int id) {
 			this.id=id;

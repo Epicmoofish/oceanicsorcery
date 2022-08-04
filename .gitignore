@@ -3,3 +3,12 @@
 /build/
 /run/
 /.idea/
+/.gradle/
+/.gradle/7.4/
+/.gradle/buildOutputCleanup/
+/.gradle/loom-cache/
+/.gradle/vcs-1/
+/.gradle/vcs-1/gc.properties
+/.gradle/file-system.probe
+/.idea/
+/build/
