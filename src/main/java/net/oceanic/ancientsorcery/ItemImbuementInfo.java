@@ -1,6 +1,15 @@
 package net.oceanic.ancientsorcery;
 
-import net.minecraft.item.*;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.BowItem;
+import net.minecraft.item.CrossbowItem;
+import net.minecraft.item.FishingRodItem;
+import net.minecraft.item.FlintAndSteelItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShieldItem;
+import net.minecraft.item.ToolItem;
+import net.minecraft.item.TridentItem;
 import net.minecraft.nbt.NbtCompound;
 
 public class ItemImbuementInfo {
@@ -51,7 +60,7 @@ public class ItemImbuementInfo {
         return false;
     }
     public static boolean canImbue(Item item) {
-        return item instanceof ToolItem || item instanceof ArmorItem || item instanceof BowItem || item instanceof ShearsItem || item instanceof FlintAndSteelItem || item instanceof FishingRodItem || item instanceof CrossbowItem || item instanceof ShieldItem || item instanceof TridentItem;
+        return item instanceof ToolItem || item instanceof ArmorItem || item instanceof BowItem || item instanceof net.minecraft.item.ShearsItem || item instanceof FlintAndSteelItem || item instanceof FishingRodItem || item instanceof CrossbowItem || item instanceof ShieldItem || item instanceof TridentItem;
     }
     public static boolean isImbued(ItemStack stack) {
         if (!stack.isEmpty()){

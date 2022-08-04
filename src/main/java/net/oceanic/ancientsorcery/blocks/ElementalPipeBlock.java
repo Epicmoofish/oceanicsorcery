@@ -6,13 +6,13 @@ import net.minecraft.world.World;
 
 public class ElementalPipeBlock extends Block {
     private final int tier;
-    private final int transferRate;
-    public ElementalPipeBlock(Settings settings, int tier, int transferRate) {
+    private final float transferRate;
+    public ElementalPipeBlock(Settings settings, int tier, float transferRate) {
         super(settings);
         this.tier = tier;
         this.transferRate=transferRate;
     }
-    public int getTransferRate(){
+    public float getTransferRate(){
         return transferRate;
     }
     public int getTier(){

@@ -8,9 +8,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 // Code also yoinked from TheSwirlingVoid
@@ -67,6 +71,33 @@ public class NetworkControllerFiles extends BaseControllerFiles {
             newFileId++;
         }
     }
+    public void writeJson(UUID uuid, Set<ElementalNetworkControllerBlock.BlockEntityTransfer> transferSet) {
+        JSONObject file = new JSONObject();
+        JSONArray array = new JSONArray();
+        for (ElementalNetworkControllerBlock.BlockEntityTransfer transfer: transferSet) {
+            JSONObject object = new JSONObject();
+            object.put("pos",String.valueOf(transfer.getInfo().getPos().asLong()));
+            object.put("tier",transfer.getInfo().getTier());
+            object.put("transferRate",String.valueOf(transfer.getInfo().getTransferRate()));
+            object.put("pipePos",String.valueOf(transfer.getInfo().getPipePos().asLong()));
+            object.put("transferMode", transfer.getMode().id);
+            object.put("spell", transfer.getSpell().id);
+            array.put(object);
+        }
+        file.put("transfers", array);
+        String fileIdString = uuid.toString();
+
+        String dimName = getDimensionNameFromWorld();
+
+        File dir = new File(PIPE_REGION_DIR_PATH + "/" + dimName);
+        File jsonfile = new File(dir.toPath().toString() + "/" + fileIdString + FILE_FORMAT);
+        try (BufferedWriter writer = Files.newBufferedWriter(jsonfile.toPath())) {
+            file.write(writer,1,1);
+            writer.write("\n");
+        } catch (Exception ex) {
+            System.out.println("Couldn't write JSON");
+        }
+    }
     public Set<ElementalNetworkControllerBlock.BlockEntityTransfer> readJson(UUID uuid) {
         String fileIdString = uuid.toString();
 
@@ -84,7 +115,7 @@ public class NetworkControllerFiles extends BaseControllerFiles {
                     try {
                         BlockPos pos = BlockPos.fromLong(Long.parseLong(((String)jsonObject.get("pos"))));
                         int tier = (int)jsonObject.get("tier");
-                        float transferRate = ((BigDecimal)jsonObject.get("transferRate")).floatValue();
+                        float transferRate = Float.valueOf((String)jsonObject.get("transferRate"));
                         BlockPos pipePos = BlockPos.fromLong(Long.parseLong(((String)jsonObject.get("pipePos"))));
                         ElementalNetworkControllerBlock.BlockEntityInfo info = new ElementalNetworkControllerBlock.BlockEntityInfo(pos, tier, transferRate, pipePos);
                         OceanicSorceryMod.TransferMode transferMode = OceanicSorceryMod.TransferMode.valueOfLabel((int)jsonObject.get("transferMode"));
@@ -95,6 +126,7 @@ public class NetworkControllerFiles extends BaseControllerFiles {
                     }
                 }
             }
+            System.out.println(blockEntityTransfers);
             return blockEntityTransfers;
         }
         return new HashSet<>();

@@ -44,20 +44,16 @@ public class ElementalNetworkControllerBlock extends BlockWithEntity {
             if (world.getBlockEntity(pos) instanceof NetworkControllerBlockEntity) {
                 Set<BlockEntityTransfer> sendToClient = new HashSet<>();
                 NetworkControllerBlockEntity blockEntity = (NetworkControllerBlockEntity) world.getBlockEntity(pos);
-                PacketByteBuf buf = PacketByteBufs.create();
-                for (BlockEntityInfo beinfo: blockEntity.routableBEs) {
-                    sendToClient.add(new BlockEntityTransfer(beinfo, OceanicSorceryMod.TransferMode.NONE, OceanicSorceryMod.Spell.GRAVITY));
-                }
-                System.out.println(NetworkControllerFiles.get(world).readJson(blockEntity.uuid));
-                buf = SorceryPacketByteBuf.writeSetBlockEntityTransfer(sendToClient, buf);
-                buf.writeBlockPos(pos);
-                ServerPlayNetworking.send((ServerPlayerEntity) player, PacketInfo.CLIENTBOUND_CONTROLLER_ID,buf);
+//                PacketByteBuf buf = PacketByteBufs.create();
+//                buf = SorceryPacketByteBuf.writeSetBlockEntityTransfer(blockEntity.routableTransfers, buf);
+//                buf.writeBlockPos(pos);
+//                ServerPlayNetworking.send((ServerPlayerEntity) player, PacketInfo.CLIENTBOUND_CONTROLLER_ID,buf);
             }
         }
         if (world.isClient()){
             if (world.getBlockEntity(pos) instanceof NetworkControllerBlockEntity) {
                 NetworkControllerBlockEntity blockEntity = (NetworkControllerBlockEntity) world.getBlockEntity(pos);
-//                System.out.println(blockEntity.routableBEs);
+//                Screen.blockEntity.routableTransfers
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);
@@ -88,14 +84,14 @@ public class ElementalNetworkControllerBlock extends BlockWithEntity {
         if (block instanceof ElementalPipeBlock) {
             ElementalPipeBlock pipeBlock = (ElementalPipeBlock)block;
             int tier = pipeBlock.getTier();
-            int transferRate = pipeBlock.getTransferRate();
+            float transferRate = pipeBlock.getTransferRate();
             currentSet.add(new BlockEntityInfo(start.up(), tier, transferRate,start));
             currentSet.add(new BlockEntityInfo(start.down(), tier, transferRate,start));
             currentSet.add(new BlockEntityInfo(start.west(), tier, transferRate,start));
             currentSet.add(new BlockEntityInfo(start.east(), tier, transferRate,start));
             currentSet.add(new BlockEntityInfo(start.north(), tier, transferRate,start));
             currentSet.add(new BlockEntityInfo(start.south(), tier, transferRate,start));
-            currentSet.removeIf(BEInfo -> world == null|| world.getBlockEntity(BEInfo.getPos()) == null || alreadyIn.contains(BEInfo));
+            currentSet.removeIf(BEInfo -> world == null|| world.getBlockEntity(BEInfo.getPos()) == null || alreadyIn.contains(BEInfo) || world.getBlockEntity(BEInfo.getPos()) instanceof NetworkControllerBlockEntity);
         }
         return currentSet;
     }

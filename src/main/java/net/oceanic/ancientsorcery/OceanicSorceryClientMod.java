@@ -62,6 +62,7 @@ public class OceanicSorceryClientMod implements ClientModInitializer {
                             routable.add(transfer.getInfo());
                         }
                         networkBE.routableBEs = routable;
+                        networkBE.routableTransfers = transferSet;
                     }
                 });
             });

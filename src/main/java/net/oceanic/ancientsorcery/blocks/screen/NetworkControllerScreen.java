@@ -10,10 +10,10 @@ import net.oceanic.ancientsorcery.blocks.ElementalNetworkControllerBlock;
 import java.util.List;
 
 public class NetworkControllerScreen extends Screen {
-    public final List<ElementalNetworkControllerBlock.BlockEntityInfo> info;
-    protected NetworkControllerScreen(Text title, List<ElementalNetworkControllerBlock.BlockEntityInfo> info, World world) {
+    public final List<ElementalNetworkControllerBlock.BlockEntityTransfer> transfer;
+    protected NetworkControllerScreen(Text title, List<ElementalNetworkControllerBlock.BlockEntityTransfer> transfer, World world) {
         super(title);
-        this.info=info;
+        this.transfer=transfer;
     }
 
     @Override

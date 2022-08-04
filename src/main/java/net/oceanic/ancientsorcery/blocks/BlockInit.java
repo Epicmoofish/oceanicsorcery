@@ -14,8 +14,8 @@ import net.oceanic.ancientsorcery.OceanicSorceryMod;
 import net.oceanic.ancientsorcery.blocks.blockentity.NetworkControllerBlockEntity;
 
 public class BlockInit {
-    public static final Block TIER1_PIPE_BLOCK = new ElementalPipeBlock(FabricBlockSettings.of(Material.METAL).strength(1.0f),1, 100);
-    public static final Block TIER2_PIPE_BLOCK = new ElementalPipeBlock(FabricBlockSettings.of(Material.METAL).strength(1.0f),2, 200);
+    public static final Block TIER1_PIPE_BLOCK = new ElementalPipeBlock(FabricBlockSettings.of(Material.METAL).strength(1.0f),1, 0.2f);
+    public static final Block TIER2_PIPE_BLOCK = new ElementalPipeBlock(FabricBlockSettings.of(Material.METAL).strength(1.0f),2, 1);
     public static final Block CONTROLLER_BLOCK = new ElementalNetworkControllerBlock(FabricBlockSettings.of(Material.METAL).strength(1.0f));
 
     public static BlockEntityType<NetworkControllerBlockEntity> NETWORK_CONTROLLER_BE;
