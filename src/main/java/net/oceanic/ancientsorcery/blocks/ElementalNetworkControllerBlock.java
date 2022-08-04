@@ -1,6 +1,7 @@
 package net.oceanic.ancientsorcery.blocks;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -10,6 +11,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -17,11 +19,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.oceanic.ancientsorcery.OceanicSorceryMod;
 import net.oceanic.ancientsorcery.blocks.blockentity.NetworkControllerBlockEntity;
+import net.oceanic.ancientsorcery.packet.PacketInfo;
+import net.oceanic.ancientsorcery.packet.SorceryPacketByteBuf;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ElementalNetworkControllerBlock extends BlockWithEntity {
@@ -38,6 +40,19 @@ public class ElementalNetworkControllerBlock extends BlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient()) {
+            if (world.getBlockEntity(pos) instanceof NetworkControllerBlockEntity) {
+                Set<BlockEntityTransfer> sendToClient = new HashSet<>();
+                NetworkControllerBlockEntity blockEntity = (NetworkControllerBlockEntity) world.getBlockEntity(pos);
+                PacketByteBuf buf = PacketByteBufs.create();
+                for (BlockEntityInfo beinfo: blockEntity.routableBEs) {
+                    sendToClient.add(new BlockEntityTransfer(beinfo, OceanicSorceryMod.TransferMode.EXTRACT, OceanicSorceryMod.Spell.GRAVITY));
+                }
+                buf = SorceryPacketByteBuf.writeSetBlockEntityTransfer(sendToClient, buf);
+                buf.writeBlockPos(pos);
+                ServerPlayNetworking.send((ServerPlayerEntity) player, PacketInfo.CLIENTBOUND_CONTROLLER_ID,buf);
+            }
+        }
+        if (world.isClient()){
             if (world.getBlockEntity(pos) instanceof NetworkControllerBlockEntity) {
                 NetworkControllerBlockEntity blockEntity = (NetworkControllerBlockEntity) world.getBlockEntity(pos);
                 System.out.println(blockEntity.routableBEs);
@@ -177,7 +192,7 @@ public class ElementalNetworkControllerBlock extends BlockWithEntity {
         }
         @Override
         public String toString() {
-            return "BlockEntityInfo{info="+getInfo().toString()+", mode="+getMode()+", spell="+getSpell()+"}";
+            return "BlockEntityTransfer{info="+getInfo().toString()+", mode="+getMode()+", spell="+getSpell()+"}";
         }
     }
 }

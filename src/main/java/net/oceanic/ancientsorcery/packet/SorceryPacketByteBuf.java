@@ -10,52 +10,46 @@ import net.oceanic.ancientsorcery.blocks.ElementalNetworkControllerBlock;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SorceryPacketByteBuf extends PacketByteBuf {
-    public SorceryPacketByteBuf(ByteBuf parent) {
-        super(parent);
+public class SorceryPacketByteBuf {
+    public static PacketByteBuf writeBlockEntityInfo(ElementalNetworkControllerBlock.BlockEntityInfo info, PacketByteBuf buf){
+        buf.writeBlockPos(info.getPos());
+        buf.writeInt(info.getTier());
+        buf.writeFloat(info.getTransferRate());
+        buf.writeBlockPos(info.getPipePos());
+        return buf;
     }
-    public static SorceryPacketByteBuf create() {
-        return new SorceryPacketByteBuf(Unpooled.buffer());
+    public static PacketByteBuf writeBlockEntityTransfer(ElementalNetworkControllerBlock.BlockEntityTransfer transfer, PacketByteBuf buf){
+        SorceryPacketByteBuf.writeBlockEntityInfo(transfer.getInfo(), buf);
+        buf.writeInt(transfer.getMode().id);
+        buf.writeInt(transfer.getSpell().uniqueID);
+        return buf;
     }
-    public SorceryPacketByteBuf writeBlockEntityInfo(ElementalNetworkControllerBlock.BlockEntityInfo info){
-        this.writeBlockPos(info.getPos());
-        this.writeInt(info.getTier());
-        this.writeFloat(info.getTransferRate());
-        this.writeBlockPos(info.getPipePos());
-        return this;
+    public static PacketByteBuf writeSetBlockEntityTransfer(Set<ElementalNetworkControllerBlock.BlockEntityTransfer> setTransfer, PacketByteBuf buf){
+        buf.writeInt(setTransfer.size());
+        for (ElementalNetworkControllerBlock.BlockEntityTransfer transfer: setTransfer){
+            SorceryPacketByteBuf.writeBlockEntityTransfer(transfer, buf);
+        }
+        return buf;
     }
-    public SorceryPacketByteBuf writeBlockEntityTransfer(ElementalNetworkControllerBlock.BlockEntityTransfer transfer){
-        this.writeBlockEntityInfo(transfer.getInfo());
-        this.writeInt(transfer.getMode().id);
-        this.writeInt(transfer.getSpell().uniqueID);
-        return this;
-    }
-    public ElementalNetworkControllerBlock.BlockEntityTransfer readBlockEntityTransfer(){
-        ElementalNetworkControllerBlock.BlockEntityInfo info = this.readBlockEntityInfo();
-        OceanicSorceryMod.TransferMode mode = OceanicSorceryMod.TransferMode.valueOfLabel(this.readInt());
-        OceanicSorceryMod.Spell spell = OceanicSorceryMod.Spell.valueOfUniqueID(this.readInt());
+    public static ElementalNetworkControllerBlock.BlockEntityTransfer readBlockEntityTransfer(PacketByteBuf buf){
+        ElementalNetworkControllerBlock.BlockEntityInfo info = SorceryPacketByteBuf.readBlockEntityInfo(buf);
+        OceanicSorceryMod.TransferMode mode = OceanicSorceryMod.TransferMode.valueOfLabel(buf.readInt());
+        OceanicSorceryMod.Spell spell = OceanicSorceryMod.Spell.valueOfUniqueID(buf.readInt());
         return new ElementalNetworkControllerBlock.BlockEntityTransfer(info, mode, spell);
     }
-    public SorceryPacketByteBuf writeSetBlockEntityTransfer(Set<ElementalNetworkControllerBlock.BlockEntityTransfer> setTransfer){
-        this.writeInt(setTransfer.size());
-        for (ElementalNetworkControllerBlock.BlockEntityTransfer transfer: setTransfer){
-            this.writeBlockEntityTransfer(transfer);
-        }
-        return this;
-    }
-    public Set<ElementalNetworkControllerBlock.BlockEntityTransfer> readSetBlockEntityTransfer(){
-        int size = this.readInt();
+    public static Set<ElementalNetworkControllerBlock.BlockEntityTransfer> readSetBlockEntityTransfer(PacketByteBuf buf){
+        int size = buf.readInt();
         Set<ElementalNetworkControllerBlock.BlockEntityTransfer> setTransfer = new HashSet<>();
         for (int index = 0; index<size;index++){
-            setTransfer.add(this.readBlockEntityTransfer());
+            setTransfer.add(SorceryPacketByteBuf.readBlockEntityTransfer(buf));
         }
         return setTransfer;
     }
-    public ElementalNetworkControllerBlock.BlockEntityInfo readBlockEntityInfo(){
-        BlockPos pos = this.readBlockPos();
-        int tier = this.readInt();
-        float transferRate = this.readFloat();
-        BlockPos pipePos = this.readBlockPos();
+    public static ElementalNetworkControllerBlock.BlockEntityInfo readBlockEntityInfo(PacketByteBuf buf){
+        BlockPos pos = buf.readBlockPos();
+        int tier = buf.readInt();
+        float transferRate = buf.readFloat();
+        BlockPos pipePos = buf.readBlockPos();
         ElementalNetworkControllerBlock.BlockEntityInfo info = new ElementalNetworkControllerBlock.BlockEntityInfo(pos, tier, transferRate, pipePos);
         return info;
     }
