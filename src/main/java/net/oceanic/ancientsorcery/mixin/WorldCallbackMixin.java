@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.oceanic.ancientsorcery.ItemImbumentInfo;
+import net.oceanic.ancientsorcery.ItemImbuementInfo;
 import net.oceanic.ancientsorcery.callbacks.BlockUpdateCallback;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,4 +27,5 @@ public class WorldCallbackMixin {
 	public void onBlockUpdate(BlockPos pos, BlockState oldBlock, BlockState newBlock, CallbackInfo ci) {
 		ActionResult result = BlockUpdateCallback.EVENT.invoker().update((World)(Object)(this), pos, oldBlock, newBlock);
 	}
+
 }

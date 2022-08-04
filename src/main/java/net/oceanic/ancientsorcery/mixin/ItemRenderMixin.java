@@ -11,7 +11,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.oceanic.ancientsorcery.ItemImbumentInfo;
+import net.oceanic.ancientsorcery.ItemImbuementInfo;
 import net.oceanic.ancientsorcery.callbacks.BlockUpdateCallback;
 import org.lwjgl.system.MemoryStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +29,7 @@ import java.util.List;
 public class ItemRenderMixin {
 	@Inject(method = "renderBakedItemQuads", at = @At(value="INVOKE",target="Lnet/minecraft/client/render/VertexConsumer;quad(Lnet/minecraft/client/util/math/MatrixStack$Entry;Lnet/minecraft/client/render/model/BakedQuad;FFFII)V",shift=At.Shift.AFTER),locals= LocalCapture.CAPTURE_FAILEXCEPTION)
 	public void onBlockUpdate(MatrixStack matrices, VertexConsumer vertices, List<BakedQuad> quads, ItemStack stack, int light, int overlay, CallbackInfo ci, boolean bl, MatrixStack.Entry entry, Iterator var9, BakedQuad bakedQuad, int i, float f, float g, float h) {
-		if (ItemImbumentInfo.isImbued(stack)) {
+		if (ItemImbuementInfo.isImbued(stack)) {
 			this.customQuad(vertices,entry, bakedQuad, new float[]{1.0f, 1.0f, 1.0f, 1.0f}, f, g, h, new int[]{light, light, light, light}, overlay, false, stack);
 		}
 	}
@@ -61,7 +61,7 @@ public class ItemRenderMixin {
 					float l = (float)(byteBuffer.get(12) & 0xFF) / 255.0f;
 					m = (float)(byteBuffer.get(13) & 0xFF) / 255.0f;
 					n = (float)(byteBuffer.get(14) & 0xFF) / 255.0f;
-					float percentage = ((float)ItemImbumentInfo.getImbumentPercentage(stack))/100.0f;
+					float percentage = ((float)ItemImbuementInfo.getImbuementPercentage(stack))/100.0f;
 					red= l * (1.0f-percentage) + red * percentage;
 					green= m * (1.0f-percentage) + green * percentage;
 					blue= n * (1.0f-percentage) + blue * percentage;
@@ -72,7 +72,7 @@ public class ItemRenderMixin {
 					float l = (float)(byteBuffer.get(12) & 0xFF) / 255.0f;
 					m = (float)(byteBuffer.get(13) & 0xFF) / 255.0f;
 					n = (float)(byteBuffer.get(14) & 0xFF) / 255.0f;
-					float percentage = ((float)ItemImbumentInfo.getImbumentPercentage(stack))/100.0f;
+					float percentage = ((float)ItemImbuementInfo.getImbuementPercentage(stack))/100.0f;
 					red= l * (1.0f-percentage) + red * percentage;
 					green= m * (1.0f-percentage) + green * percentage;
 					blue= n * (1.0f-percentage) + blue * percentage;

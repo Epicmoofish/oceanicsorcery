@@ -16,7 +16,7 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.Hand;
-import net.oceanic.ancientsorcery.ItemImbumentInfo;
+import net.oceanic.ancientsorcery.ItemImbuementInfo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

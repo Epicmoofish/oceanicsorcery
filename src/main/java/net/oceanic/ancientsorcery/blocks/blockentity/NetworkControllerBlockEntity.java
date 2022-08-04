@@ -17,6 +17,7 @@ import java.util.Set;
 public class NetworkControllerBlockEntity extends BlockEntity {
     public Set<ElementalNetworkControllerBlock.BlockEntityInfo> routableBEs = new HashSet<>();
     public boolean loaded = false;
+    public boolean shouldUpdate = false;
     public int id = 0;
     public NetworkControllerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockInit.NETWORK_CONTROLLER_BE, pos, state);
@@ -45,6 +46,19 @@ public class NetworkControllerBlockEntity extends BlockEntity {
                         be.loaded=true;
                     } else {
                         be.routableBEs = new HashSet<>();
+                    }
+                }
+            }
+        }
+        if (be.shouldUpdate){
+            be.shouldUpdate=false;
+            if (!world.isClient()) {
+                if (world != null && pos != null) {
+                    if (state.getBlock() instanceof ElementalNetworkControllerBlock) {
+                        ElementalNetworkControllerBlock block = (ElementalNetworkControllerBlock) state.getBlock();
+                        Set<ElementalNetworkControllerBlock.BlockEntityInfo> routables = block.findRoutableBEs(world, pos);
+                        be.routableBEs = routables;
+                        be.loaded=true;
                     }
                 }
             }

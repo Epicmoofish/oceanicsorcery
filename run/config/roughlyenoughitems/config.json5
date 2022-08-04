@@ -1,6 +1,8 @@
 {
 	"basics": {
-		"favorites": [],
+		"favorites": [
+			"{data:{Count:1b,id:\"minecraft:rotten_flesh\",type:\"minecraft:item\"},type:\"roughlyenoughitems:entry_stack\"}"
+		],
 		"hiddenFavorites": [],
 		"displayHistory": [],
 		// Declares whether cheating mode is on.

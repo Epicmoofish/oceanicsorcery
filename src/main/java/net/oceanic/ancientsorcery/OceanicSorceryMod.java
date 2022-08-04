@@ -45,9 +45,9 @@ public class OceanicSorceryMod implements ModInitializer {
 		BlockInit.init();
 		AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
 			ItemStack stack = player.getStackInHand(hand);
-			if (ItemImbumentInfo.isImbued(stack)) {
-				if (ItemImbumentInfo.getImbumentType(stack).equals("gravity")) {
-					if (ItemImbumentInfo.setImbumentPercentage(stack, ItemImbumentInfo.getImbumentPercentage(stack) - 10)) {
+			if (ItemImbuementInfo.isImbued(stack)) {
+				if (ItemImbuementInfo.getImbuementType(stack).equals("gravity")) {
+					if (ItemImbuementInfo.setImbuementPercentage(stack, ItemImbuementInfo.getImbuementPercentage(stack) - 10)) {
 						entity.setOnGround(false);
 						entity.setNoGravity(true);
 						float pitch = player.getPitch();
@@ -66,18 +66,11 @@ public class OceanicSorceryMod implements ModInitializer {
 			return ActionResult.PASS;
 		});
 		BlockUpdateCallback.EVENT.register((world,pos,oldstate, newstate) -> {
-			if (!world.isClient() && (oldstate.getBlock() instanceof ElementalPipeBlock || newstate.getBlock() instanceof ElementalPipeBlock) || oldstate.hasBlockEntity() || newstate.hasBlockEntity()) {
+			if (!world.isClient() && (oldstate.getBlock() instanceof ElementalPipeBlock || newstate.getBlock() instanceof ElementalPipeBlock || oldstate.hasBlockEntity() || newstate.hasBlockEntity())) {
 				world.blockEntityTickers.forEach(entityTicker -> {
-					BlockEntity be = world.getBlockEntity(entityTicker.getPos());
-					BlockState state = world.getBlockState(entityTicker.getPos());
-					if (be instanceof NetworkControllerBlockEntity) {
-						if (state.getBlock() instanceof ElementalNetworkControllerBlock) {
-							NetworkControllerBlockEntity networkBE = (NetworkControllerBlockEntity) be;
-							ElementalNetworkControllerBlock block = (ElementalNetworkControllerBlock) state.getBlock();
-							Set<ElementalNetworkControllerBlock.BlockEntityInfo> routables = block.findRoutableBEs(world, entityTicker.getPos());
-							if (!routables.isEmpty()) {
-								networkBE.routableBEs = routables;
-							}
+					if (world.getBlockEntity(entityTicker.getPos()) != null) {
+						if (world.getBlockEntity(entityTicker.getPos()) instanceof NetworkControllerBlockEntity) {
+							((NetworkControllerBlockEntity)world.getBlockEntity(entityTicker.getPos())).shouldUpdate = true;
 						}
 					}
 				});

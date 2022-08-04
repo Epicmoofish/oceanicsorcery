@@ -30,16 +30,16 @@ public class OceanicSorceryClientMod implements ClientModInitializer {
             ));
             ClientTickEvents.END_CLIENT_TICK.register(client -> {
                 while (keyBindingGUI.wasPressed()) {
-                    ItemImbumentInfo.setImbumentPercentage(client.player.getMainHandStack(),ItemImbumentInfo.getImbumentPercentage(client.player.getMainHandStack())+1.0f);
-                    ItemImbumentInfo.setImbumentType(client.player.getMainHandStack(), "gravity");
+                    ItemImbuementInfo.setImbuementPercentage(client.player.getMainHandStack(),ItemImbuementInfo.getImbuementPercentage(client.player.getMainHandStack())+1.0f);
+                    ItemImbuementInfo.setImbuementType(client.player.getMainHandStack(), "gravity");
                 }
             });
             List<Item> modifiedItems = new ArrayList<Item>();
             List<Item> registeredItems = Registry.ITEM.stream().toList();
             modifiedItems.addAll(registeredItems);
-            modifiedItems.removeIf(item -> !ItemImbumentInfo.canImbue(item));
+            modifiedItems.removeIf(item -> !ItemImbuementInfo.canImbue(item));
             for (Item item: modifiedItems){
-                ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ItemImbumentInfo.getColor(stack), item);
+                ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ItemImbuementInfo.getColor(stack), item);
             }
         }
     }

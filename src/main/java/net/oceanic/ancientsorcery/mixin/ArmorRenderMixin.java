@@ -19,7 +19,7 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.Vector4f;
-import net.oceanic.ancientsorcery.ItemImbumentInfo;
+import net.oceanic.ancientsorcery.ItemImbuementInfo;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.MemoryStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,19 +42,19 @@ public class ArmorRenderMixin<T extends LivingEntity, M extends BipedEntityModel
 			float f = (float)(i >> 16 & 0xFF) / 255.0f;
 			float g = (float)(i >> 8 & 0xFF) / 255.0f;
 			float h = (float)(i & 0xFF) / 255.0f;
-			int i2 = ItemImbumentInfo.getColor(itemStack);
+			int i2 = ItemImbuementInfo.getColor(itemStack);
 			float r2 = (float)(i2 >> 16 & 0xFF) / 255.0f;
 			float g2 = (float)(i2 >> 8 & 0xFF) / 255.0f;
 			float b2 = (float)(i2 & 0xFF) / 255.0f;
-			float percentage = ((float)ItemImbumentInfo.getImbumentPercentage(itemStack))/100.0f;
+			float percentage = ((float)ItemImbuementInfo.getImbuementPercentage(itemStack))/100.0f;
 			this.renderArmorParts(matrices, vertexConsumers, light, armorItem, bl2, model, bl, f*(1-percentage)+r2*percentage, g*(1-percentage)+g2*percentage, h*(1-percentage)+b2*percentage, null,1.0f);
 			this.renderArmorParts(matrices, vertexConsumers, light, armorItem, bl2, model, bl, r2, g2, b2, "overlay",percentage);
 		} else {
-			int i2 = ItemImbumentInfo.getColor(itemStack);
+			int i2 = ItemImbuementInfo.getColor(itemStack);
 			float r2 = (float)(i2 >> 16 & 0xFF) / 255.0f;
 			float g2 = (float)(i2 >> 8 & 0xFF) / 255.0f;
 			float b2 = (float)(i2 & 0xFF) / 255.0f;
-			float percentage = ((float)ItemImbumentInfo.getImbumentPercentage(itemStack))/100.0f;
+			float percentage = ((float)ItemImbuementInfo.getImbuementPercentage(itemStack))/100.0f;
 			this.renderArmorParts(matrices, vertexConsumers, light, armorItem, bl2, model, bl, r2, g2, b2, null,percentage);
 		}
 	}
