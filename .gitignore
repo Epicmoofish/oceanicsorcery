@@ -12,3 +12,4 @@
 /.gradle/file-system.probe
 /.idea/
 /build/
+/run/
